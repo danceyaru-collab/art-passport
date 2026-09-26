@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORLD ART MUSEUM PASSPORT - Kanji & Saya</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        passport: {
+                            dark: '#0c1a13',      // 背景用の超深緑
+                            green: '#152b1e',     // メインのグリーンレザー色
+                            lightgreen: '#1f3d2b',// カードやアクセント用の緑
+                            gold: '#d4af37',      // メインゴールド
+                            goldlight: '#f3e5ab', // 明るいゴールド
+                            golddark: '#aa820a',  // 重厚な暗めゴールド
+                            cream: '#f9f6f0',     // 文字用のクリーム色
+                            paper: '#e8e2d5'      // 用紙風カラー
+                        }
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        serif: ['Noto Serif JP', 'Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ページ全体背景：重厚感のあるレザー質感とグラデーション */
+        body {
+            background-color: #0c1a13;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
+                repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0, rgba(0,0,0,0.1) 2px, transparent 0, transparent 4px);
+            font-family: 'Noto Serif JP', serif;
+            color: #f9f6f0;
+        }
+
+        /* 金枠グラデーションの定義 */
+        .gold-border {
+            border: 1px solid transparent;
+            border-image: linear-gradient(to bottom right, #f3e5ab, #d4af37, #aa820a) 1;
+        }
+
+        /* 金色のグラデーション文字効果 */
+        .gold-text {
+            background: linear-gradient(135deg, #fff2be 0%, #d4af37 50%, #aa820a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 各美術館カードのスタイルとホバー（マウスを乗せた時）の立体的な動き */
+        .passport-card {
+            background: linear-gradient(145deg, #183324, #102218);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(212, 175, 55, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .passport-card:hover {
+            transform: translateY(-4px); /* 上に少し浮き上がる */
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        /* 訪問済みスタンプの点滅・光彩エフェクト */
+        .stamp-visited {
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0) 70%);
+            border: 2px dashed #d4af37;
+            animation: pulse-gold 3s infinite alternate;
+        }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); }
+            100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.6); }
+        }
+
+        /* カスタムスクロールバーのデザイン */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0c1a13;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f3d2b;
+            border: 1px solid #d4af37;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+
+    <header class="border-b border-passport-gold/30 bg-passport-green/80 backdrop-blur-md sticky top-0 z-30 px-4 py-4 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full border-2 border-passport-gold flex items-center justify-center bg-passport-dark shadow-inner">
+                    <i class="fa-solid fa-landmark text-passport-gold text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-cinzel font-bold text-xl md:text-2xl tracking-wider gold-text">WORLD ART MUSEUM PASSPORT</h1>
+                    <p class="text-xs text-passport-goldlight/80 tracking-widest font-serif">OWNER: <span class="font-bold text-passport-gold">Kanji &amp; Saya</span></p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <div class="bg-passport-dark/80 px-4 py-2 rounded-lg border border-passport-gold/30 flex items-center gap-4">
+                    <div class="text-right">
+                        <span class="text-xs text-gray-400 block">訪問達成度</span>
+                        <span id="visitedCountText" class="font-cinzel text-lg font-bold text-passport-gold">0 / 49</span>
+                    </div>
+                    <div class="w-24 bg-gray-800 h-2.5 rounded-full overflow-hidden border border-passport-gold/30">
+                        <div id="progressBar" class="bg-gradient-to-r from-passport-golddark via-passport-gold to-passport-goldlight h-full transition-all duration-500 w-0"></div>
+                    </div>
+                </div>
+
+                <button onclick="exportData()" title="データを保存（JSON出力）" class="bg-passport-lightgreen hover:bg-passport-gold/20 text-passport-gold border border-passport-gold/40 px-3 py-2 rounded-md text-sm transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">データ保存</span>
+                </button>
+                <button onclick="document.getElementById('importFile').click()" title="データを読み込み" class="bg-passport-lightgreen hover:bg-passport-gold/20 text-passport-gold border border-passport-gold/40 px-3 py-2 rounded-md text-sm transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-upload"></i> <span class="hidden sm:inline">データ復元</span>
+                </button>
+                <input type="file" id="importFile" class="hidden" accept=".json" onchange="importData(event)">
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 mt-8">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-passport-green/40 p-4 rounded-xl border border-passport-gold/20">
+            <div class="flex flex-wrap gap-2 justify-center">
+                <button onclick="setFilter('all')" id="btn-all" class="filter-btn active px-4 py-2 rounded-lg text-sm font-semibold transition-all border border-passport-gold bg-passport-gold text-passport-dark">
+                    すべて (<span id="count-all">49</span>)
+                </button>
+                <button onclick="setFilter('japan')" id="btn-japan" class="filter-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all border border-passport-gold/30 bg-passport-dark text-passport-goldlight hover:border-passport-gold">
+                    国内 (<span id="count-japan">23</span>)
+                </button>
+                <button onclick="setFilter('overseas')" id="btn-overseas" class="filter-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all border border-passport-gold/30 bg-passport-dark text-passport-goldlight hover:border-passport-gold">
+                    海外 (<span id="count-overseas">26</span>)
+                </button>
+                <button onclick="setFilter('visited')" id="btn-visited" class="filter-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all border border-passport-gold/30 bg-passport-dark text-passport-goldlight hover:border-passport-gold">
+                    訪問済み (<span id="count-visited">0</span>)
+                </button>
+                <button onclick="setFilter('unvisited')" id="btn-unvisited" class="filter-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all border border-passport-gold/30 bg-passport-dark text-passport-goldlight hover:border-passport-gold">
+                    未訪問 (<span id="count-unvisited">49</span>)
+                </button>
+            </div>
+
+            <div class="relative w-full md:w-64">
+                <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-passport-gold/50"></i>
+                <input type="text" id="searchInput" oninput="renderGrid()" placeholder="美術館名や所在地で検索..." class="w-full bg-passport-dark border border-passport-gold/30 rounded-lg pl-9 pr-4 py-2 text-sm text-passport-cream placeholder-passport-gold/30 focus:outline-none focus:border-passport-gold">
+            </div>
+        </div>
+
+        <div id="museumGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            </div>
+    </main>
+
+    <div id="museumModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-passport-green border-2 border-passport-gold rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative p-6 text-passport-cream">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-passport-gold/60 hover:text-passport-gold text-2xl transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="border-b border-passport-gold/30 pb-4 mb-6">
+                <span id="modalCategory" class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-passport-dark border border-passport-gold/40 text-passport-gold mb-2">カテゴリ</span>
+                <h2 id="modalTitle" class="text-2xl font-bold font-cinzel text-passport-goldlight">美術館名</h2>
+                <p id="modalLocation" class="text-sm text-gray-300 mt-1"><i class="fa-solid fa-location-dot text-passport-gold mr-1"></i>所在地</p>
+            </div>
+
+            <form id="stampForm" onsubmit="saveStamp(event)" class="space-y-5">
+                <input type="hidden" id="modalMuseumId">
+
+                <div class="flex items-center justify-between bg-passport-dark/60 p-4 rounded-xl border border-passport-gold/20">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-stamp text-2xl text-passport-gold"></i>
+                        <div>
+                            <p class="font-bold text-sm">訪問ステータス</p>
+                            <p class="text-xs text-gray-400">訪問済みの場合はスイッチをONにしてください</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="modalVisited" class="sr-only peer" onchange="toggleVisitedUI()">
+                        <div class="w-14 h-7 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-passport-cream after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-passport-gold"></div>
+                    </label>
+                </div>
+
+                <div id="visitedFields" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-passport-gold mb-1">訪問日</label>
+                        <input type="date" id="modalDate" class="w-full bg-passport-dark border border-passport-gold/30 rounded-lg p-2.5 text-sm text-passport-cream focus:outline-none focus:border-passport-gold">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-passport-gold mb-1">記念写真（アップロード）</label>
+                        <div class="flex items-center gap-4">
+                            <label class="cursor-pointer bg-passport-dark hover:bg-passport-lightgreen border border-passport-gold/40 text-passport-gold px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all">
+                                <i class="fa-solid fa-camera"></i> 写真を選択
+                                <input type="file" id="modalPhotoInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                            </label>
+                            <span id="photoFileName" class="text-xs text-gray-400 truncate max-w-[200px]">選択されていません</span>
+                        </div>
+                        <div id="photoPreviewContainer" class="mt-3 relative hidden">
+                            <img id="photoPreview" class="w-full h-48 object-cover rounded-xl border border-passport-gold/40 shadow-md">
+                            <button type="button" onclick="removePhoto()" class="absolute top-2 right-2 bg-red-900/80 hover:bg-red-700 text-white p-1.5 rounded-full text-xs" title="画像を削除">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-passport-gold mb-1">ふたりの思い出・感想</label>
+                        <textarea id="modalNotes" rows="3" placeholder="お気に入りの作品や当時の思い出を記録..." class="w-full bg-passport-dark border border-passport-gold/30 rounded-lg p-2.5 text-sm text-passport-cream focus:outline-none focus:border-passport-gold"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-passport-gold/20">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl border border-gray-600 text-gray-300 text-sm hover:bg-gray-800 transition-all">
+                        キャンセル
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-passport-golddark to-passport-gold text-passport-dark font-bold text-sm shadow-lg hover:brightness-110 transition-all">
+                        更新・保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 全49館のマスターデータ（全情報・正しい日本語表記）
+        const masterMuseums = [
+            // 海外 (26館)
+            { id: 1, name: "ルーヴル美術館", location: "フランス・パリ", category: "overseas" },
+            { id: 2, name: "オルセー美術館", location: "フランス・パリ", category: "overseas" },
+            { id: 3, name: "ポンピドゥー・センター", location: "フランス・パリ", category: "overseas" },
+            { id: 4, name: "バチカン美術館", location: "バチカン市国", category: "overseas" },
+            { id: 5, name: "ウフィツィ美術館", location: "イタリア・フィレンツェ", category: "overseas" },
+            { id: 6, name: "プラド美術館", location: "スペイン・マドリード", category: "overseas" },
+            { id: 7, name: "ソフィア王妃芸術センター", location: "スペイン・マドリード", category: "overseas" },
+            { id: 8, name: "ビルバオ・グッゲンハイム美術館", location: "スペイン・ビルバオ", category: "overseas" },
+            { id: 9, name: "ソロモン・R・グッゲンハイム美術館", location: "アメリカ・ニューヨーク", category: "overseas" },
+            { id: 10, name: "メトロポリタン美術館", location: "アメリカ・ニューヨーク", category: "overseas" },
+            { id: 11, name: "ニューヨーク近代美術館 (MoMA)", location: "アメリカ・ニューヨーク", category: "overseas" },
+            { id: 12, name: "ホイットニー美術館", location: "アメリカ・ニューヨーク", category: "overseas" },
+            { id: 13, name: "ワシントン・ナショナル・ギャラリー", location: "アメリカ・ワシントンD.C.", category: "overseas" },
+            { id: 14, name: "ゲティ・センター", location: "アメリカ・ロサンゼルス", category: "overseas" },
+            { id: 15, name: "エルミタージュ美術館", location: "ロシア・サンクトペテルブルク", category: "overseas" },
+            { id: 16, name: "美術史美術館", location: "オーストリア・ウィーン", category: "overseas" },
+            { id: 17, name: "アムステルダム国立美術館", location: "オランダ・アムステルダム", category: "overseas" },
+            { id: 18, name: "ファン・ゴッホ美術館", location: "オランダ・アムステルダム", category: "overseas" },
+            { id: 19, name: "国立故宮博物院", location: "台湾・台北", category: "overseas" },
+            { id: 20, name: "ルーヴル・アブダビ", location: "UAE・アブダビ", category: "overseas" },
+            { id: 21, name: "イスラム美術博物館 (MIA)", location: "カタール・ドーハ", category: "overseas" },
+            { id: 22, name: "ソウマヤ美術館", location: "メキシコ・メキシコシティ", category: "overseas" },
+            { id: 23, name: "ニテロイ現代美術館", location: "ブラジル・リオデジャネイロ", category: "overseas" },
+            { id: 24, name: "プラダ財団", location: "イタリア・ミラノ", category: "overseas" },
+            { id: 25, name: "M+", location: "香港", category: "overseas" },
+            { id: 26, name: "シンガポール国立美術館", location: "シンガポール", category: "overseas" },
+
+            // 国内 (23館)
+            { id: 27, name: "足立美術館", location: "島根県・安来市", category: "japan" },
+            { id: 28, name: "国立西洋美術館", location: "東京都・上野", category: "japan" },
+            { id: 29, name: "地中美術館", location: "香川県・直島", category: "japan" },
+            { id: 30, name: "金沢21世紀美術館", location: "石川県・金沢市", category: "japan" },
+            { id: 31, name: "箱根彫刻の森美術館", location: "神奈川県・箱根町", category: "japan" },
+            { id: 32, name: "大塚国際美術館", location: "徳島県・鳴門市", category: "japan" },
+            { id: 33, name: "青森県立美術館", location: "青森県・青森市", category: "japan" },
+            { id: 34, name: "根津美術館", location: "東京都・港区", category: "japan" },
+            { id: 35, name: "サントリー美術館", location: "東京都・港区", category: "japan" },
+            { id: 36, name: "東京国立博物館", location: "東京都・上野", category: "japan" },
+            { id: 37, name: "豊田市美術館", location: "愛知県・豊田市", category: "japan" },
+            { id: 38, name: "直島新美術館", location: "香川県・直島", category: "japan" },
+            { id: 39, name: "ベネッセハウス ミュージアム", location: "香川県・直島", category: "japan" },
+            { id: 40, name: "李禹煥美術館", location: "香川県・直島", category: "japan" },
+            { id: 41, name: "兵庫県立美術館", location: "兵庫県・神戸市", category: "japan" },
+            { id: 42, name: "島根県立石見美術館", location: "島根県・益田市", category: "japan" },
+            { id: 43, name: "下瀬美術館", location: "広島県・大竹市", category: "japan" },
+            { id: 44, name: "せんだいメディアテーク", location: "宮城県・仙台市", category: "japan" },
+            { id: 45, name: "多治見市モザイクタイルミュージアム", location: "岐阜県・多治見市", category: "japan" },
+            { id: 46, name: "横須賀美術館", location: "神奈川県・横須賀市", category: "japan" },
+            { id: 47, name: "植田正治写真美術館", location: "鳥取県・伯耆町", category: "japan" },
+            { id: 48, name: "長崎県美術館", location: "長崎県・長崎市", category: "japan" },
+            { id: 49, name: "角川武蔵野ミュージアム", location: "埼玉県・所沢市", category: "japan" }
+        ];
+
+        // アプリケーションの状態保持変数
+        let userUserData = {}; // ユーザーの訪問記録 { [id]: { visited: true, date: '', photo: '', notes: '' } }
+        let currentFilter = 'all'; // 現在選択されているフィルターの保持
+
+        // ページ読み込み時の初期化処理
+        window.onload = function() {
+            loadUserData();   // ローカルストレージからデータ読み込み
+            renderGrid();     // カードグリッドの描画
+            updateProgress(); // 進捗バーの更新
+        };
+
+        // ブラウザのローカルストレージからユーザーデータを読み込む関数
+        function loadUserData() {
+            const saved = localStorage.getItem('kanji_saya_art_passport');
+            if (saved) {
+                try {
+                    userUserData = JSON.parse(saved);
+                } catch(e) {
+                    console.error('データの読み込みエラー', e);
+                    userUserData = {};
+                }
+            }
+        }
+
+        // ユーザーデータをローカルストレージに保存する関数
+        function saveUserData() {
+            localStorage.setItem('kanji_saya_art_passport', JSON.stringify(userUserData));
+            updateProgress();
+            renderGrid();
+        }
+
+        // 条件に応じて全美術館カードを動的に生成・表示するメイン描画関数
+        function renderGrid() {
+            const grid = document.getElementById('museumGrid');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            grid.innerHTML = ''; // 画面クリア
+
+            // マスターデータからの絞り込みフィルタリング
+            const filtered = masterMuseums.filter(m => {
+                const userData = userUserData[m.id] || {};
+                const isVisited = !!userData.visited;
+
+                // フィルタータブによる判定
+                if (currentFilter === 'japan' && m.category !== 'japan') return false;
+                if (currentFilter === 'overseas' && m.category !== 'overseas') return false;
+                if (currentFilter === 'visited' && !isVisited) return false;
+                if (currentFilter === 'unvisited' && isVisited) return false;
+
+                // 検索キーワードによる判定
+                if (searchVal) {
+                    return m.name.toLowerCase().includes(searchVal) || m.location.toLowerCase().includes(searchVal);
+                }
+
+                return true;
+            });
+
+            // 絞り込まれたデータを元にカードHTMLを生成
+            filtered.forEach(m => {
+                const data = userUserData[m.id] || {};
+                const isVisited = !!data.visited;
+
+                const card = document.createElement('div');
+                card.className = `passport-card rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden cursor-pointer`;
+                card.onclick = () => openModal(m.id);
+
+                // 写真が保存されている場合のHTML部分
+                const photoSection = data.photo ? 
+                    `<div class="mt-3 h-32 w-full rounded-lg overflow-hidden border border-passport-gold/30">
+                        <img src="${data.photo}" class="w-full h-full object-cover">
+                     </div>` : '';
+
+                // 訪問日の記録がある場合のHTML部分
+                const dateSection = data.date ? `<p class="text-xs text-passport-gold/80 mt-2"><i class="fa-regular fa-calendar mr-1"></i>${data.date}</p>` : '';
+
+                // カード内部要素の構築
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border border-passport-gold/30 bg-passport-dark text-passport-gold">
+                                ${m.category === 'japan' ? '国内' : '海外'}
+                            </span>
+                            ${isVisited ? '<span class="text-xs text-passport-gold font-bold"><i class="fa-solid fa-circle-check"></i> VISITED</span>' : ''}
+                        </div>
+                        <h3 class="font-bold text-lg text-passport-cream font-serif">${m.name}</h3>
+                        <p class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-location-dot text-passport-gold/60 mr-1"></i>${m.location}</p>
+                        ${photoSection}
+                        ${dateSection}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-passport-gold/20 flex justify-between items-center">
+                        <span class="text-xs text-gray-400">スタンプ</span>
+                        ${isVisited ? 
+                            `<div class="w-10 h-10 rounded-full border-2 border-passport-gold flex items-center justify-center bg-passport-gold/20 text-passport-gold text-xs font-bold font-cinzel rotate-[-12deg] shadow-lg">
+                                PASSED
+                             </div>` : 
+                            `<div class="w-10 h-10 rounded-full border border-dashed border-gray-600 flex items-center justify-center text-gray-600 text-xs">
+                                未
+                             </div>`
+                        }
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // フィルターボタン切り替え関数
+        function setFilter(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-passport-gold', 'text-passport-dark');
+                btn.classList.add('bg-passport-dark', 'text-passport-goldlight');
+            });
+
+            const activeBtn = document.getElementById(`btn-${type}`);
+            activeBtn.classList.remove('bg-passport-dark', 'text-passport-goldlight');
+            activeBtn.classList.add('bg-passport-gold', 'text-passport-dark');
+
+            renderGrid();
+        }
+
+        // 全体の達成率・進捗バーを計算＆更新する関数
+        function updateProgress() {
+            const total = masterMuseums.length;
+            let visitedCount = 0;
+
+            masterMuseums.forEach(m => {
+                if (userUserData[m.id] && userUserData[m.id].visited) {
+                    visitedCount++;
+                }
+            });
+
+            const pct = Math.round((visitedCount / total) * 100);
+            document.getElementById('visitedCountText').innerText = `${visitedCount} / ${total}`;
+            document.getElementById('progressBar').style.width = `${pct}%`;
+
+            // タブ内件数の集計更新
+            document.getElementById('count-all').innerText = total;
+            document.getElementById('count-japan').innerText = masterMuseums.filter(m => m.category === 'japan').length;
+            document.getElementById('count-overseas').innerText = masterMuseums.filter(m => m.category === 'overseas').length;
+            document.getElementById('count-visited').innerText = visitedCount;
+            document.getElementById('count-unvisited').innerText = total - visitedCount;
+        }
+
+        let tempPhotoBase64 = ''; // モーダル開閉時の画像一時保持変数
+
+        // モーダルダイアログを開く関数
+        function openModal(id) {
+            const m = masterMuseums.find(x => x.id === id);
+            const data = userUserData[id] || {};
+
+            document.getElementById('modalMuseumId').value = id;
+            document.getElementById('modalTitle').innerText = m.name;
+            document.getElementById('modalLocation').innerText = m.location;
+            document.getElementById('modalCategory').innerText = m.category === 'japan' ? '国内' : '海外';
+
+            const visitedInput = document.getElementById('modalVisited');
+            visitedInput.checked = !!data.visited;
+
+            document.getElementById('modalDate').value = data.date || '';
+            document.getElementById('modalNotes').value = data.notes || '';
+
+            tempPhotoBase64 = data.photo || '';
+            if (tempPhotoBase64) {
+                document.getElementById('photoPreview').src = tempPhotoBase64;
+                document.getElementById('photoPreviewContainer').classList.remove('hidden');
+                document.getElementById('photoFileName').innerText = '保存済みの画像';
+            } else {
+                document.getElementById('photoPreviewContainer').classList.add('hidden');
+                document.getElementById('photoFileName').innerText = '選択されていません';
+            }
+
+            toggleVisitedUI();
+            document.getElementById('museumModal').classList.remove('hidden');
+        }
+
+        // モーダルダイアログを閉じる関数
+        function closeModal() {
+            document.getElementById('museumModal').classList.add('hidden');
+        }
+
+        // 訪問ステータスのチェック有無で入力エリアの有効化/無効化を切り替える関数
+        function toggleVisitedUI() {
+            const isChecked = document.getElementById('modalVisited').checked;
+            const visitedFields = document.getElementById('visitedFields');
+            if (isChecked) {
+                visitedFields.classList.remove('opacity-40', 'pointer-events-none');
+            } else {
+                visitedFields.classList.add('opacity-40', 'pointer-events-none');
+            }
+        }
+
+        // 画像選択時にBase64データへ変換する処理
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            document.getElementById('photoFileName').innerText = file.name;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                tempPhotoBase64 = evt.target.result;
+                document.getElementById('photoPreview').src = tempPhotoBase64;
+                document.getElementById('photoPreviewContainer').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 写真取り消し処理
+        function removePhoto() {
+            tempPhotoBase64 = '';
+            document.getElementById('modalPhotoInput').value = '';
+            document.getElementById('photoFileName').innerText = '選択されていません';
+            document.getElementById('photoPreviewContainer').classList.add('hidden');
+        }
+
+        // モーダルフォームの送信（保存）実行関数
+        function saveStamp(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('modalMuseumId').value);
+            const isVisited = document.getElementById('modalVisited').checked;
+
+            userUserData[id] = {
+                visited: isVisited,
+                date: document.getElementById('modalDate').value,
+                notes: document.getElementById('modalNotes').value,
+                photo: tempPhotoBase64
+            };
+
+            saveUserData(); // 画面＆ローカルストレージ更新
+            closeModal();   // モーダルを閉じる
+        }
+
+        // 訪問履歴データをJSONファイルとしてダウンロード（バックアップ作成）
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(userUserData, null, 2));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", `art_museum_stamp_passport_${new Date().toISOString().slice(0,10)}.json`);
+            dlAnchorElem.click();
+        }
+
+        // 外部JSONファイルを取り込んでデータを復元する処理
+        function importData(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const imported = JSON.parse(evt.target.result);
+                    userUserData = imported;
+                    saveUserData();
+                    alert('スタンプデータを正常に復元・更新しました！');
+                } catch(err) {
+                    alert('ファイルの読み込みに失敗しました。正しいJSONファイルかご確認ください。');
+                }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
